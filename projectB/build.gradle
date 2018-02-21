@@ -1,0 +1,48 @@
+apply plugin: 'base'
+apply plugin: 'maven-publish'
+apply plugin: 'distribution'
+
+group = 'shortbeard'
+
+task buildAnExec(type: Exec) {
+    def outputFile = file('build/main')
+
+    inputs.file 'main.c'
+    outputs.file outputFile
+
+    doFirst {
+        outputFile.getParentFile().mkdirs()
+    }
+    executable 'gcc'
+    args(
+        '-o', outputFile,
+        'main.c',
+    )
+}
+
+distributions {
+    main {
+        contents {
+            from 'build/main'
+        }
+    }
+}
+
+distTar.dependsOn buildAnExec
+
+publishing {
+    publications {
+        main(MavenPublication) {
+            artifact distTar
+        }
+    }
+}
+
+artifacts {
+    add('default', distTar)
+}
+
+configurations.each { c ->
+    println c
+    c.allArtifacts.getFiles().each { println it }
+}

@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+configurations {
+    bins
+}
+
+dependencies {
+    implementation(
+        'longbeard:projectA:+',
+    )
+    bins(
+        'shortbeard:projectB:+',
+    )
+
+}
+
+task extractABin(type:Copy, dependsOn: configurations.bins) {
+    from configurations.bins.getSingleFile()
+    into 'build/extractosaurus'
+}
