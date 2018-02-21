@@ -23,12 +23,10 @@ task buildAnExec(type: Exec) {
 distributions {
     main {
         contents {
-            from 'build/main'
+            from buildAnExec
         }
     }
 }
-
-distTar.dependsOn buildAnExec
 
 publishing {
     publications {
@@ -40,9 +38,4 @@ publishing {
 
 artifacts {
     add('default', distTar)
-}
-
-configurations.each { c ->
-    println c
-    c.allArtifacts.getFiles().each { println it }
 }
